@@ -1,3 +1,4 @@
+import os
 import random
 
 
@@ -49,13 +50,22 @@ def main():
         else:
             print("Неверный выбор. Попробуйте снова.")
 
+    path = input("Куда сохранять? Рядом с .py - 0, в /downloads - 1: ").strip()
+    save_path = ""  # значение по умолчанию - текущая директория
+
+    if path == '1':
+        save_path = "/storage/emulated/0/Downloads/"
+
     # Генерируем два IMEI
     tac = selected_model['tac']
     imei1 = generate_valid_imei(tac)
     imei2 = generate_valid_imei(tac)
 
+    filename = "IMEI0"
+    file_path = os.path.join(save_path, filename) if path == '1' else filename
+
     # Записываем в файл IMEI0
-    with open('IMEI0', 'w') as f:
+    with open(file_path, 'w') as f:
         f.write(imei1 + '\n')
         f.write(imei2 + '\n')
 
