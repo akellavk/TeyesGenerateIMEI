@@ -58,16 +58,34 @@ def main():
     imei2 = generate_valid_imei(tac)
 
     if path == '1':
-        # В Termux используем специальные пути
-        save_path = "/storage/emulated/0/Download/"
+        # Пробуем разные возможные пути для Download папки
+        possible_paths = [
+            "/storage/emulated/0/Download/",
+            "/sdcard/Download/",
+            "/storage/self/primary/Download/"
+        ]
 
-        # Проверяем существование директории, если нет - создаем
-        if not os.path.exists(save_path):
-            os.makedirs(save_path, exist_ok=True)
-
-        file_path = os.path.join(save_path, "IMEI0")
+        for save_path in possible_paths:
+            try:
+                file_path = os.path.join(save_path, "IMEI0")
+                with open(file_path, 'w') as f:
+                    f.write(imei1 + '\n')
+                    f.write(imei2 + '\n')
+                print(f"Успешно сохранено в: {file_path}")
+                break
+            except:
+                continue
+        else:
+            print("Не удалось сохранить в Download, сохраняю в текущей директории")
+            file_path = "IMEI0"
+            with open(file_path, 'w') as f:
+                f.write(imei1 + '\n')
+                f.write(imei2 + '\n')
     else:
         file_path = "IMEI0"
+        with open(file_path, 'w') as f:
+            f.write(imei1 + '\n')
+            f.write(imei2 + '\n')
 
     # Записываем в файл IMEI0
     with open(file_path, 'w') as f:
