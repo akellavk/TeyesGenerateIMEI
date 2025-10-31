@@ -51,18 +51,23 @@ def main():
             print("Неверный выбор. Попробуйте снова.")
 
     path = input("Куда сохранять? Рядом с .py - 0, в /downloads - 1: ").strip()
-    save_path = ""  # значение по умолчанию - текущая директория
-
-    if path == '1':
-        save_path = "/storage/emulated/0/Downloads/"
 
     # Генерируем два IMEI
     tac = selected_model['tac']
     imei1 = generate_valid_imei(tac)
     imei2 = generate_valid_imei(tac)
 
-    filename = "IMEI0"
-    file_path = os.path.join(save_path, filename) if path == '1' else filename
+    if path == '1':
+        # В Termux используем специальные пути
+        save_path = "/storage/emulated/0/Download/"
+
+        # Проверяем существование директории, если нет - создаем
+        if not os.path.exists(save_path):
+            os.makedirs(save_path, exist_ok=True)
+
+        file_path = os.path.join(save_path, "IMEI0")
+    else:
+        file_path = "IMEI0"
 
     # Записываем в файл IMEI0
     with open(file_path, 'w') as f:
